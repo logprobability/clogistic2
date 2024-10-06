@@ -1,5 +1,5 @@
 =========
-clogistic2
+clogistic w. enhancements
 =========
 
 .. image::  https://travis-ci.com/guillermo-navas-palencia/clogistic.svg?branch=master
