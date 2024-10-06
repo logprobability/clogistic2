@@ -1,5 +1,5 @@
 =========
-clogistic
+clogistic2
 =========
 
 .. image::  https://travis-ci.com/guillermo-navas-palencia/clogistic.svg?branch=master
@@ -32,7 +32,7 @@ To install from source, download or clone the git repository
 
 .. code-block:: text
 
-   git clone https://github.com/guillermo-navas-palencia/clogistic.git
+   git clone https://github.com/logprobability/clogistic2.git
    cd clogistic
    python setup.py install
 
