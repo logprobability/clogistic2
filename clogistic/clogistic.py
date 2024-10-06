@@ -65,9 +65,9 @@ def _check_parameters(penalty, tol, C, fit_intercept, class_weight, solver,
             raise ValueError('Invalid value for class_weight. Allowed string '
                              'value is "balanced".')
 
-    if solver not in ("ecos", "L-BFGS-B", "scs"):
+    if solver not in ("ecos", "L-BFGS-B", "scs", "clarabel"):
         raise ValueError('Invalid value for solver. Allowed string '
-                         'values are "ecos", "L-BFGS-B" and "scs".')
+                         'values are "ecos", "L-BFGS-B", "clarabel", or "scs".')
 
     if not isinstance(max_iter, numbers.Number) or max_iter < 0:
         raise ValueError("max_iter must be positive; got {}.".format(max_iter))
@@ -350,6 +350,8 @@ def _fit_cvxpy(solver, penalty, tol, C, fit_intercept, max_iter, l1_ratio,
         solve_options = {'solver': cp.ECOS, 'abstol': tol}
     elif solver == "scs":
         solve_options = {'solver': cp.SCS, 'eps': tol}
+    elif solver == "clarabel":
+        solve_options = {'solver': cp.CLARABEL, 'abstol': tol}
 
     problem.solve(max_iters=max_iter, verbose=verbose, warm_start=warm_start,
                   **solve_options)
@@ -370,10 +372,10 @@ class LogisticRegression(BaseEstimator, LinearClassifierMixin,
     Constrained Logistic Regression (aka logit, MaxEnt) classifier.
 
     This class implements regularized logistic regression supported bound
-    and linear constraints using the 'ecos', 'scs' and 'L-BFGS-B' solvers.
+    and linear constraints using the 'ecos', 'scs', 'clarabel', or 'L-BFGS-B' solvers.
 
     All solvers support only L1, L2 and Elastic-Net regularization or no
-    regularization. The 'L-BFGS-B' solver supports bound constraints for L2
+    regularization. The 'L-BFGS-B' and 'clarabel' solvers support bound constraints for L2
     regularization. The 'ecos' and 'scs' solver support bound constraints and
     linear constraints for all regularizations.
 
@@ -407,7 +409,7 @@ class LogisticRegression(BaseEstimator, LinearClassifierMixin,
         Note that these weights will be multiplied with sample_weight (passed
         through the fit method) if sample_weight is specified.
 
-    solver : {'ecos', 'L-BFGS-B', 'scs'}, default='ecos'
+    solver : {'clarabel', 'ecos', 'L-BFGS-B', 'scs'}, default='clarabel'
         Algorithm/solver to use in the optimization problem.
 
         - Unconstrained 'L-BFGS-B' handles all regularizations.
@@ -454,7 +456,7 @@ class LogisticRegression(BaseEstimator, LinearClassifierMixin,
         http://users.iems.northwestern.edu/~nocedal/L-BFGS-Bb.html
     """
     def __init__(self, penalty="l2", tol=1e-4, C=1.0, fit_intercept=True,
-                 class_weight=None, solver="ecos", max_iter=100, l1_ratio=None,
+                 class_weight=None, solver="clarabel", max_iter=100, l1_ratio=None,
                  warm_start=False, verbose=False):
 
         self.penalty = penalty
@@ -529,7 +531,7 @@ class LogisticRegression(BaseEstimator, LinearClassifierMixin,
                                         self.intercept_[:, np.newaxis],
                                         axis=1)
 
-        if self.solver in ("ecos", "scs"):
+        if self.solver in ("ecos", "scs", "clarabel"):
             coef_, intercept_ = _fit_cvxpy(
                 self.solver, self.penalty, self.tol, self.C,
                 self.fit_intercept, self.max_iter, self.l1_ratio,
