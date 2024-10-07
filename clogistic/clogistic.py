@@ -347,13 +347,13 @@ def _fit_cvxpy(solver, penalty, tol, C, fit_intercept, max_iter, l1_ratio,
     problem = cp.Problem(obj, cons)
 
     if solver == "ecos":
-        solve_options = {'solver': cp.ECOS, 'abstol': tol}
+        solve_options = {'solver': cp.ECOS, 'abstol': tol, 'max_iters': max_iter}
     elif solver == "scs":
-        solve_options = {'solver': cp.SCS, 'eps': tol}
+        solve_options = {'solver': cp.SCS, 'eps': tol, 'max_iters': max_iter}
     elif solver == "clarabel":
-        solve_options = {'solver': cp.CLARABEL, 'abstol': tol}
+        solve_options = {'solver': cp.CLARABEL, 'abstol': tol, 'max_iter': max_iter}
 
-    problem.solve(max_iters=max_iter, verbose=verbose, warm_start=warm_start,
+    problem.solve(verbose=verbose, warm_start=warm_start,
                   **solve_options)
 
     if fit_intercept:
