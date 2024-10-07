@@ -351,7 +351,7 @@ def _fit_cvxpy(solver, penalty, tol, C, fit_intercept, max_iter, l1_ratio,
     elif solver == "scs":
         solve_options = {'solver': cp.SCS, 'eps': tol, 'max_iters': max_iter}
     elif solver == "clarabel":
-        solve_options = {'solver': cp.CLARABEL, 'abstol': tol, 'max_iter': max_iter}
+        solve_options = {'solver': cp.CLARABEL, 'tol_gap_abs': tol, 'max_iter': max_iter}
 
     problem.solve(verbose=verbose, warm_start=warm_start,
                   **solve_options)
