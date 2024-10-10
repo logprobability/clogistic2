@@ -33,7 +33,7 @@ To install from source, download or clone the git repository
 .. code-block:: text
 
    git clone https://github.com/logprobability/clogistic2.git
-   cd clogistic
+   cd clogistic2
    python setup.py install
 
 Dependencies
